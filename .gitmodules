@@ -4,6 +4,3 @@
 [submodule "nginx"]
 	path = nginx
 	url = https://github.com/nginx/nginx.git
-[submodule "gin"]
-	path = gin
-	url = https://github.com/gin-gonic/gin.git
