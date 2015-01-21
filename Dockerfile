@@ -8,10 +8,6 @@ ADD . /src
 #UPDATE
 RUN apt-get update
 RUN apt-get install -y git
-RUN apt-get -y install python-software-properties  # 12.04
-RUN add-apt-repository ppa:duh/golang
-RUN apt-get update
-RUN apt-get -y install golang
 
 #SET ENV
 ENV GOPATH /root/goApps/
