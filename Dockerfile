@@ -27,7 +27,7 @@ RUN \
 
 
 #FETCH Packages
-ADD gin $GOPATH/gin/src
+ADD gin $HOME/goApps/src/github.com/gin-gonic/gin
 RUN cd /src; go build -o server server.go;
 
 #Set the commands
