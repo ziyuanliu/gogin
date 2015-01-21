@@ -11,8 +11,8 @@ RUN apt-get install -y gccgo-go
 RUN apt-get install -y git
 
 #SET ENV
-ENV GOPATH $HOME/goApps/
-ENV PATH $HOME/goApps/bin:$PATH
+ENV GOPATH /root/goApps/
+ENV PATH /root/goApps/bin:$PATH
 
 RUN \
   dpkg --get-selections | grep -v deinstall | awk '{print $1}' | sort > /tmp/initial-packages && \
@@ -27,7 +27,9 @@ RUN \
 
 
 #FETCH Packages
-ADD gin $HOME/goApps/src/github.com/gin-gonic/gin
+ADD gin /root/goApps/src/github.com/gin-gonic/gin
+RUN go install /root/goApps/src/github.com/gin-gonic/gin
+
 RUN cd /src; go build -o server server.go;
 
 #Set the commands
