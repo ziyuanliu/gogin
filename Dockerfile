@@ -13,7 +13,6 @@ RUN apt-get install -y git
 #SET ENV
 ENV GOPATH $HOME/goApps/
 ENV PATH $HOME/goApps/bin:$PATH
-ENV PATH /usr/bin:PATH
 
 RUN \
   dpkg --get-selections | grep -v deinstall | awk '{print $1}' | sort > /tmp/initial-packages && \
@@ -28,7 +27,7 @@ RUN \
 
 
 #FETCH Packages
-RUN go get github.com/gin-gonic/gin
+ADD gin $GOPATH/gin
 RUN cd /src; go build -o server server.go;
 
 #Set the commands
