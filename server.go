@@ -3,7 +3,9 @@ package main
 import (
 	"bytes"
 	"time"
-
+"fmt"
+"io/ioutil"
+ "net/http"
 	"github.com/gin-gonic/gin"
 )
 
@@ -50,9 +52,25 @@ func Publish(c *gin.Context) {
 	buffer.WriteString("/pub?id=")
 	buffer.WriteString(json.Channel)
 	// fmt.Println("redirecting to", buffer.String())
-	c.Redirect(307, buffer.String())
+//	c.Redirect(307, buffer.String())
+        //c.Writer.Header().Set("X-Accel-Redirect", buffer.String())
+	//c.Writer.Header().Set("Content-Type","text/plain")
+	//c.Writer.Header().Set("Cache-Control","no-cache")
+	defer c.Request.Body.Close()
+	client := &http.Client{}
+	req,_ := http.NewRequest("POST","http://0.0.0.0/pub",c.Request.Body)
+	req.Header.Add("X-Accel-Redirect",buffer.String())
+	_,err:=client.Do(req)
+	if err!=nil{
+		fmt.Println("there's an error :(")
+	}else{
+		body, _ := ioutil.ReadAll(c.Request.Body)
+		fmt.Println("posted with",body)
+	}
+	c.String(200,"yay")
 
 }
+
 
 func main() {
 	router := gin.Default()
