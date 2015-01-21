@@ -1,4 +1,4 @@
-var ws = new WebSocket("ws://127.0.0.1:9080/subscribe");
+var ws = new WebSocket("ws://127.0.0.1/subscribe");
 // var ws1 = new WebSocket("ws://127.0.0.1:9080/subscribe");
 ws.onclose = function() { // thing to do on close
     $('#con_status').val("closed");

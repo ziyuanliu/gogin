@@ -27,7 +27,7 @@ RUN \
 #Set the commands
 
 CMD /usr/local/nginx/sbin/nginx -c /src/nginx.conf;
-CMD /src/server_ubuntu
+#CMD /src/server_ubuntu
 
 EXPOSE 80
 #EXPOSE 443
