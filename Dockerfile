@@ -8,11 +8,12 @@ ADD . /src
 #UPDATE
 RUN apt-get update
 RUN apt-get install -y gccgo-go
-RUN apt-get install -y mercurial
+RUN apt-get install -y git
 
 #SET ENV
 ENV GOPATH $HOME/goApps/
 ENV PATH $HOME/goApps/bin:$PATH
+ENV PATH /usr/bin:PATH
 
 RUN \
   dpkg --get-selections | grep -v deinstall | awk '{print $1}' | sort > /tmp/initial-packages && \
