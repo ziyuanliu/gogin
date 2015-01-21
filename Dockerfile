@@ -7,8 +7,11 @@ ADD . /src
 
 #UPDATE
 RUN apt-get update
-RUN apt-get install -y gccgo-go
 RUN apt-get install -y git
+RUN sudo apt-get install python-software-properties  # 12.04
+RUN sudo add-apt-repository ppa:duh/golang
+RUN sudo apt-get update
+RUN sudo apt-get install golang
 
 #SET ENV
 ENV GOPATH /root/goApps/
