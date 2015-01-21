@@ -28,14 +28,9 @@ RUN \
   dpkg --get-selections | grep -v deinstall | awk '{print $1}' | sort > /tmp/final-packages && \
   DEBIAN_FRONT_END=noninteractive apt-get -y purge `comm -13 /tmp/initial-packages /tmp/final-packages`
 
-
-#FETCH Packages
-ADD gin /root/goApps/src/github.com/gin-gonic/gin
-RUN cd /src; go build -o server server.go;
-
 #Set the commands
 CMD /usr/local/nginx/sbin/nginx -g 'daemon off;'
-CMD /src/server
+CMD /src/server_ubuntu
 
 EXPOSE 80
 #EXPOSE 443
