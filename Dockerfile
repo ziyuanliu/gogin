@@ -8,6 +8,7 @@ ADD . /src
 #UPDATE
 RUN apt-get update
 RUN apt-get install -y gccgo-go
+RUN apt-get install -y mercurial
 
 #SET ENV
 ENV GOPATH $HOME/goApps/
