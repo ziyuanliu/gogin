@@ -25,7 +25,10 @@ RUN \
   DEBIAN_FRONT_END=noninteractive apt-get -y purge `comm -13 /tmp/initial-packages /tmp/final-packages`
 
 #Set the commands
+
 CMD /usr/local/nginx/sbin/nginx -g 'daemon off;'
+CMD /usr/local/nginx/sbin/nginx -c nginx.conf;
+
 CMD /src/server_ubuntu
 
 EXPOSE 80
