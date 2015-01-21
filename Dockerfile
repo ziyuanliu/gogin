@@ -8,10 +8,10 @@ ADD . /src
 #UPDATE
 RUN apt-get update
 RUN apt-get install -y git
-RUN sudo apt-get install python-software-properties  # 12.04
-RUN sudo add-apt-repository ppa:duh/golang
-RUN sudo apt-get update
-RUN sudo apt-get install golang
+RUN apt-get -y install python-software-properties  # 12.04
+RUN add-apt-repository ppa:duh/golang
+RUN apt-get update
+RUN apt-get -y install golang
 
 #SET ENV
 ENV GOPATH /root/goApps/
@@ -31,8 +31,6 @@ RUN \
 
 #FETCH Packages
 ADD gin /root/goApps/src/github.com/gin-gonic/gin
-RUN go install /root/goApps/src/github.com/gin-gonic/gin
-
 RUN cd /src; go build -o server server.go;
 
 #Set the commands
