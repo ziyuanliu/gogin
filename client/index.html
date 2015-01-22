@@ -7,13 +7,13 @@
 </head>
 <body>
 <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
-<script src="client.js" type="text/javascript" language="javascript" charset="utf-8"></script>
+<script src="pushstream.js" type="text/javascript" language="javascript" charset="utf-8"></script>
 
     <p>Server Status <Span id="con_status">off</Span> Message received: <Span id="msg_received">0</Span></p>
     <p>INFO: all subscribers -> channel id = 1 </p>
     <p>The Websocket engine is a part of the HTML5 protocol, thus no heart beat :( (will disconnect within 30seconds))</p>
     <p>if you're feeling wild, open up the browser console: "ws.send("message here")"</p>
-    <p>if you're feeling really wild, "curl -s -v -X POST 'http://104.236.97.245/pub?id=1' -d 'really wild' "</p>    
+    <p>if you're feeling really wild, "curl -s -v -X POST 'http://104.236.97.245/pub?id=1' -d 'really wild' "</p>
         <div>
             <h2>Any messages will be listed here</h2>
         <ul id="received"></ul>
