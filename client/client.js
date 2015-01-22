@@ -22,8 +22,8 @@
 
 
 var pushstream = new PushStream({
-    host:104.236.97.245,
-    port:80,
+    host:"104.236.97.245",
+    port:"80",
     modes: 'websocket'
 });
 
