@@ -2,80 +2,70 @@ package main
 
 import (
 	"bytes"
+	"encoding/json"
+	"fmt"
+	"net/http"
 	"time"
-"fmt"
-"io/ioutil"
- "net/http"
+
+	"github.com/apcera/nats"
 	"github.com/gin-gonic/gin"
 )
 
-type MessageJSON struct {
-	Channel string `json:"channel" binding:"required"`
-	Message string `json:"message" binding:"required"`
-}
-
-type SubscribeJSON struct {
-	Channel string `json:"channel" binding:"required"`
-	Time    string `json:"_" binding:"required"`
+type Notification struct {
+	Channel int    `json:"channel"`
+	Message string `json:"message"`
 }
 
 func Subscribe(c *gin.Context) {
 
-	// var json SubscribeJSON
-	// c.Bind(&json)
-	// c_cp := c.Copy()
-	// go func() {
-	var t time.Time
+	t := time.Now()
 	var buffer bytes.Buffer
 	buffer.WriteString("/ws?_=")
-	buffer.WriteString(string(t.UnixNano()))
+	// buffer.WriteString("string(t.Unix())")
 	buffer.WriteString("&tag=&time=&eventid=&channels=1")
-	// buffer.WriteString(json.Time)
-	// buffer.WriteString("&tag=&time=&eventid=&channels=")
-	// buffer.WriteString(json.Channel)
 
+	fmt.Println("buffer", buffer.String(), t.Unix())
 	c.Writer.Header().Set("X-Accel-Redirect", buffer.String())
-	// }()
-
+	// c.String(200, "")
 }
 
-func Publish(c *gin.Context) {
+func initCommunication() {
+	nc, _ := nats.Connect(nats.DefaultURL)
+	c, _ := nats.NewEncodedConn(nc, "json")
 
-	var json MessageJSON
-	okay := c.Bind(&json)
-	if !okay {
-		c.JSON(403, gin.H{"error": "malformed JSON"})
-		return
-	}
+	c.Subscribe("notification", func(s string) {
+		note := &Notification{}
+		err := json.Unmarshal([]byte(s), note)
+		if err == nil {
+			fmt.Printf("Received a message: %v\n", note)
+			go postRequest(note.Channel, []byte(note.Message))
+		} else {
+			panic(err)
+		}
+	})
+}
 
-	var buffer bytes.Buffer
-	buffer.WriteString("/pub?id=")
-	buffer.WriteString(json.Channel)
-	// fmt.Println("redirecting to", buffer.String())
-//	c.Redirect(307, buffer.String())
-        //c.Writer.Header().Set("X-Accel-Redirect", buffer.String())
-	//c.Writer.Header().Set("Content-Type","text/plain")
-	//c.Writer.Header().Set("Cache-Control","no-cache")
-	defer c.Request.Body.Close()
+func postRequest(channel int, msg []byte) {
+	url := fmt.Sprintf("http://0.0.0.0:5000/pub?id=%d", channel)
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer(msg))
+	req.Header.Set("X-Custom-Header", "myvalue")
+	req.Header.Set("Content-Type", "application/json")
+
 	client := &http.Client{}
-	req,_ := http.NewRequest("POST","http://0.0.0.0/pub",c.Request.Body)
-	req.Header.Add("X-Accel-Redirect",buffer.String())
-	_,err:=client.Do(req)
-	if err!=nil{
-		fmt.Println("there's an error :(")
-	}else{
-		body, _ := ioutil.ReadAll(c.Request.Body)
-		fmt.Println("posted with",body)
+	resp, err := client.Do(req)
+	if err != nil {
+		panic(err)
 	}
-	c.String(200,"yay")
-
+	defer resp.Body.Close()
 }
-
 
 func main() {
 	router := gin.Default()
 	router.Use(gin.Recovery())
+	// router.GET("/ws/*params", Subscribe)
 	router.GET("/subscribe", Subscribe)
-	router.POST("/publish", Publish)
-	router.Run(":8000")
+	router.GET("/subscribe/*asd", Subscribe)
+
+	initCommunication()
+	router.Run(":8888")
 }

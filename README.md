@@ -2,6 +2,8 @@
 ####A combination of golang's Gin webframe work and Nginx
 ***
 
+### REMEMBER TO SWITCH BETWEEN EPOLL AND KQUEUE!!!!
+
 *easily* scalable multi/general purpose messaging platform that places a focus
 on low latency, concurrent connections, and messages/sec.
 

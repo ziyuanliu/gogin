@@ -413,7 +413,7 @@ Authors: Wandenberg Peixoto <wandenberg@gmail.com>, Rogério Carvalho Schneider 
         time   : msg[keys.jsonTimeKey],
         eventid: msg[keys.jsonEventIdKey] || ""
     };
-
+    // console.log("ms",message);
     return message;
   };
 
@@ -517,11 +517,14 @@ Authors: Wandenberg Peixoto <wandenberg@gmail.com>, Rogério Carvalho Schneider 
     if (message.tag) { this.pushstream._etag = message.tag; }
     if (message.time) { this.pushstream._lastModified = message.time; }
     if (message.eventid) { this.pushstream._lastEventId = message.eventid; }
+    // console.log("log",message,this.pushstream._onmessage);
+
     this.pushstream._onmessage(message.text, message.id, message.channel, message.eventid, true);
   };
 
   var onopenCallback = function() {
     this.pushstream._onopen();
+
     Log4js.info("[" + this.type + "] connection opened");
   };
 
@@ -906,7 +909,7 @@ Authors: Wandenberg Peixoto <wandenberg@gmail.com>, Rogério Carvalho Schneider 
     this.urlPrefixStream      = settings.urlPrefixStream      || '/sub';
     this.urlPrefixEventsource = settings.urlPrefixEventsource || '/ev';
     this.urlPrefixLongpolling = settings.urlPrefixLongpolling || '/lp';
-    this.urlPrefixWebsocket   = settings.urlPrefixWebsocket   || '/ws';
+    this.urlPrefixWebsocket   = settings.urlPrefixWebsocket   || '/subscribe';
 
     this.jsonIdKey      = settings.jsonIdKey      || 'id';
     this.jsonChannelKey = settings.jsonChannelKey || 'channel';
@@ -988,10 +991,15 @@ Authors: Wandenberg Peixoto <wandenberg@gmail.com>, Rogério Carvalho Schneider 
     },
 
     _setState: function(state) {
+        // console.log("connect",state,this.onstatuschange);
+
       if (this.readyState !== state) {
         Log4js.info("status changed", state);
         this.readyState = state;
+        // console.log("connect",state,this.onstatuschange);
+
         if (this.onstatuschange) {
+
           this.onstatuschange(this.readyState);
         }
       }
@@ -1007,7 +1015,6 @@ Authors: Wandenberg Peixoto <wandenberg@gmail.com>, Rogério Carvalho Schneider 
       this._keepConnected = true;
       this._lastUsedMode = 0;
       this._connect();
-
       Log4js.debug("leaving connect");
     },
 
@@ -1067,6 +1074,7 @@ Authors: Wandenberg Peixoto <wandenberg@gmail.com>, Rogério Carvalho Schneider 
     },
 
     _onopen: function() {
+
       this._reconnecttimer = clearTimer(this._reconnecttimer);
       this._setState(PushStream.OPEN);
       if (this._lastUsedMode > 0) {

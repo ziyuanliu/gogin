@@ -29,5 +29,6 @@ RUN \
 CMD /usr/local/nginx/sbin/nginx -c /src/nginx.conf;
 #CMD /src/server_ubuntu
 
+#one to serve html, one for nats message queue
 EXPOSE 80
-#EXPOSE 443
+EXPOSE 4442
